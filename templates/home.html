@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+<title>{% block title %}Home - Re:scrapify{% endblock %}</title>
+{% block body %}
+    <section class="w3mid-gap"></section>
+    <!--/Banner-Start-->
+    <!--/inner-page-->
+    <div class="inner-banner py-5">
+        <section class="w3l-breadcrumb text-left py-sm-5 ">
+            <div class="container">
+                <div class="w3breadcrumb-gids">
+                    <div class="w3breadcrumb-left text-left">
+                        <h2 class="inner-w3-title">
+                            Home </h2>
+                    </div>
+                    <div class="w3breadcrumb-right">
+                        <ul class="breadcrumbs-custom-path">
+                            <li class="active"><a href="{% url 'home:home' %}">Home</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+    <!--//inner-page-->
+	<div style="margin: 8px auto; display: block; text-align:center;">
+    
+
+{% endblock %}

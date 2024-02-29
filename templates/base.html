@@ -247,17 +247,7 @@ RIGHT SIDEBAR TOGGLE SECTION
                         <div class="collapse navbar-collapse overflow-hidden" id="navbarScroll">
                             <ul class="navbar-nav me-lg-auto my-2 my-lg-0 navbar-nav-scroll">
                                 <li class="nav-item">
-                                    <a class="nav-link  {% if request.path == '/' %}active{% endif %}" aria-current="page" href="{% url 'home:home' %}">Home</a>
-                                </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link" href="#Pages"  aria-current="page">
-                                        Products
-                                    </a>
-                                    <!-- <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item pt-2" href="productpage">Products</a></li>
-                                        <li><a class="dropdown-item" href="cart">Cart Page</a></li>
-                                    </ul> -->
-
+                                    <a class="nav-link  {% if request.resolver_match.url_name == 'hom--e' %}active{% endif %}" aria-current="page" href="{% url 'home:home' %}">Home</a>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#Pages" id="navbarDropdown1" role="button"
@@ -269,21 +259,15 @@ RIGHT SIDEBAR TOGGLE SECTION
                                         <li><a class="dropdown-item" href="">Scrapyard</a></li>
                                     </ul>
                                 </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#Pages" id="navbarDropdown2" role="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        Sell <span class="fa fa-angle-down ms-1"></span>
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
-                                        <li><a class="dropdown-item pt-2" href="">Creativity</a></li>
-                                        <li><a class="dropdown-item" href="">Scrapyard</a></li>
-                                    </ul>
+                                <li class="nav-item">
+                                    <a class="nav-link  {% if request.resolver_match.url_name == 'sell_product' %}active{% endif %}" 
+                                    href="{% url 'products:sell_product' %}">Sell</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link  {% if request.path == '/about/' %}active{% endif %}" href="{% url 'home:about' %}">About</a>
+                                    <a class="nav-link  {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'home:about' %}">About</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link  {% if request.path == '/contact/' %}active{% endif %}" href="{% url 'home:contact' %}">Contact</a>
+                                    <a class="nav-link  {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'home:contact' %}">Contact</a>
                                 </li>
                                 <li class="nav-item search-right">
                                     <a href="#search" class="btn ms-0 search-btn" title="search"><span

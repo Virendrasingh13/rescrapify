@@ -81,7 +81,7 @@
                     </div>
                     <div class="form-sub-w3">
                         <div class="form-group image-preview-container">
-                            <input type="file" name="user_image" id="user-image" class="form-control-file" accept="image/*" />
+                            <input type="file" name="user_image" id="image" class="form-control-file" accept="image/*" />
                             <div class="icon-w3" id="imagespan">
                                 <span class="fas fa-file-image" aria-hidden="true"></span>
                             </div>
@@ -114,34 +114,8 @@
 
 {% block js %}
 
-<script>
-    document.getElementById('user-image').addEventListener('change', function(event) {
-    var input = event.target;
-    var reader = new FileReader();
-    const imagePreview = document.getElementById('image-preview');
-    const imagespan = document.getElementById('imagespan');
-    
-    const file = input.files[0];
-    console.log(file)
-    if(file){
-        reader.onload = function() {
-            var dataURL = reader.result;
-            
-            imagePreview.src = dataURL;
-            imagePreview.style.display = 'block'
-            imagePreview.style.position = 'relative'
-            imagespan.style.visibility = 'hidden'
-        };
-        
-        reader.readAsDataURL(input.files[0]);
-    }
-    else{
-    
-    imagePreview.style.display = 'none'
-    imagespan.style.visibility = 'visible'
-}
-});
-</script>
+
+<script src="{%static 'js/imagepreview.js'%}"></script>
 
 <script src="{%static 'js/showpass.js'%}"></script>
 

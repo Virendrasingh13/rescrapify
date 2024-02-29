@@ -152,16 +152,16 @@
                                             {% endif %}
                                             {% endcomment %}
                                             <div class="form-sub-w3">
-                                                <input type="password" name="cur_password" placeholder="Current Password*" class="w-75 contact-input" required>
-                                                <span class="toggle-password fas fa-eye-slash"></span>
+                                                <input type="password" name="cur_password" id="cur_password" placeholder="Current Password*" class="w-75 contact-input" required>
+                                                <span class="toggle-password fas fa-eye"></span>
                                             </div>
                                             <div class="form-sub-w3">
-                                                <input type="password" name="new_password" placeholder="New Password*" class="w-75 contact-input" required>
-                                                <span class="toggle-password fas fa-eye-slash"></span>
+                                                <input type="password" name="new_password"id="new_password" placeholder="New Password*" class="w-75 contact-input" required>
+                                                <span class="toggle-password fas fa-eye"></span>
                                             </div>
                                             <div class="form-sub-w3">
-                                                <input type="password" name="confirm_password" placeholder="Confirm Password*" class="w-75 contact-input" required>
-                                                <span class="toggle-password fas fa-eye-slash"></span>
+                                                <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password*" class="w-75 contact-input" required>
+                                                <span class="toggle-password fas fa-eye"></span>
                                             </div>
                                             <div id="password-error" class="text-danger"></div>
                                             <div class="modal-footer">
@@ -191,13 +191,13 @@
                                 
                                 <input type="text" name="first_name" id="name" value="{% if request.user.first_name %}{{request.user.first_name}}{% endif %}" placeholder="First Name*" class="contact-input"
                                     required>
-                                <input type="text" name="last_name" id="email" placeholder="Last Name*" value="{% if request.user.last_name %}{{request.user.last_name}}{% endif %}" class="contact-input"
+                                <input type="text" name="last_name" id="last_name" placeholder="Last Name*" value="{% if request.user.last_name %}{{request.user.last_name}}{% endif %}" class="contact-input"
                                     required>
                                 <input type="email" name="email" id="email" placeholder="Your Email*" value="{{request.user.email}}" readonly class="contact-input"
                                     required>
                                 <input type="text" name="phone_no" id="phone_no" value="{% if request.user.phone_no %}{{request.user.phone_no}}{%endif%}" placeholder="Enter your Phone Number *"
                                     required>
-                                <input type="text" name="city" id="phone_no" value="{% if request.user.city %}{{request.user.city}}{% endif %}" placeholder="City*"
+                                <input type="text" name="city" id="city" value="{% if request.user.city %}{{request.user.city}}{% endif %}" placeholder="City*"
                                     required>
                                 <input type="text" name="state" id="state" placeholder="State*" class="contact-input" value="{% if request.user.state %}{{request.user.state}}{%endif%}"
                                     required>
@@ -208,7 +208,7 @@
                             </div> {% endcomment %}
                             <div class="form-input form-sub-w3">
                                 <div class="form-group image-preview-container">
-                                    <input type="file" name="user_image" id="user-image" class="form-control-file" accept="image/*" />
+                                    <input type="file" name="user_image" id="image" class="form-control-file" accept="image/*" />
                                         <img class="image-preview image-box" id="image-preview" 
                                         src="{% if request.user.user_image %}{{ request.user.user_image.url }}{% endif %}" 
                                         alt="Image Preview" style="display: block;">
@@ -230,32 +230,12 @@
 
 
 {% block js %}
-
 <script>
-    document.getElementById('user-image').addEventListener('change', function(event) {
-    var input = event.target;
-    var reader = new FileReader();
-    const imagePreview = document.getElementById('image-preview');
-    
-    const file = input.files[0];
-    console.log(file)
-    if(file){
-        reader.onload = function() {
-            var dataURL = reader.result;
-            
-            imagePreview.src = dataURL;
-            imagePreview.style.position = 'relative'
-        };
-        
-        reader.readAsDataURL(input.files[0]);
-    }
-    else{
-    
-        imagePreview.src = '{% if request.user.user_image %}{{ request.user.user_image.url }}{% endif %}';
-}
-});
+    var user_email = '{{request.user.email}}';
+    var user_image_url = '{% if request.user.user_image %}{{ request.user.user_image.url }}{% endif %}';
+    console.log(user);
 </script>
-
+<script src="{%static 'js/imagepreview.js'%}"></script>
 <script>
         const form_pass = document.getElementById('password-change-form');
         const newPassword = document.getElementById('new_password');
@@ -335,8 +315,7 @@
 </script>
 
 
-<script src="{%static 'js/showpass.js'%}">
-</script>
+<script src="{%static 'js/showpass.js'%}"></script>
 
   
 {% endblock%}

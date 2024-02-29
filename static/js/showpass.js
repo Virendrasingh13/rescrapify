@@ -8,7 +8,7 @@ function togglePasswordVisibility() {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
             // Toggle the unlock/lock icon
-            this.classList.toggle('fa-eye-slash');
+            this.classList.toggle('fa-low-vision');
             this.classList.toggle('fa-eye');
         });
     });
@@ -27,7 +27,7 @@ passwordToggle.addEventListener('click', function () {
     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
     passwordInput.setAttribute('type', type);
     // Toggle the unlock/lock icon
-    passwordToggle.classList.toggle('fa-eye-slash');
+    passwordToggle.classList.toggle('fa-low-vision');
     passwordToggle.classList.toggle('fa-eye');
 });
 

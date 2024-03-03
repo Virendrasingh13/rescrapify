@@ -10,7 +10,8 @@ def send_email_token(email, slug):
         # if user.email == email:
         #     message = f"Click on this link to verify your email\nhttp://127.0.0.1:8000/accounts/verify/{slug}"
         # else:
-        message = f"Click on this link to verify your email\nhttp://127.0.0.1:8000/accounts/verify/{slug}"
+        link = settings.LINK
+        message = f"Click on this link to verify your email\n{link}/accounts/verify/{slug}"
         subject = "Verification Token for RESCRAPIFY"
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [email]

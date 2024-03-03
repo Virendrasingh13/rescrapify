@@ -32,7 +32,6 @@ def LoginView(request):
             try:
                 # body = request.data
                 body = request.POST
-                print(body)
                 if ('email' in body and 'password' in body):
                     email = body['email']
                     password = body['password']

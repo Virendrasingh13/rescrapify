@@ -289,7 +289,7 @@ RIGHT SIDEBAR TOGGLE SECTION
                             <!-- User is authenticated -->
                             <li class="get-btn me-2 dropdown " id="profileDropdown">
                                 <!-- Profile Dropdown Button -->
-                                <button dropdown-toggle class="btn btn-style btn-secondary dropdown-toggle"  type="button" id="dropdownMenuButton"
+                                <button dropdown-toggle class="btn btn-style btn-secondary dropdown-toggle" type="button" id="userDropdownBtn"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-user me-lg-2"></i> <span class="btn-texe-inf">{{ request.user.first_name }}<span class="fa fa-angle-down ms-1"></span></span>
                                 </button>
@@ -303,7 +303,7 @@ RIGHT SIDEBAR TOGGLE SECTION
                             {% else %}
                             <!-- User is not authenticated -->
                             <li class="get-btn me-2 dropdown">
-                                <button class="btn btn-style btn-secondary dropdown-toggle" style="position:relative" type="button" id="dropdownMenuButton"
+                                <button class="btn btn-style btn-secondary dropdown-toggle" style="position:relative" type="button" id="userDropdownBtn"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-user me-lg-2"></i> <span class="btn-texe-inf">User</span>
                                 </button>
@@ -335,6 +335,18 @@ RIGHT SIDEBAR TOGGLE SECTION
                     </nav>
                 </div>
             </header>
+
+            <script>
+                var userDropdownBtn = document.getElementById('userDropdownBtn');
+                userDropdownBtn.addEventListener('click', function () {
+                    var navbarCollapse = document.querySelector('.navbar-collapse');
+                    var navbarToggler = document.querySelector('.navbar-toggler');
+                    if (navbarCollapse.classList.contains('show')) {
+                        navbarCollapse.classList.remove('show');
+                        navbarToggler.classList.add('collapsed');
+                    }
+                });
+            </script>
             <!--//Header-->
 
             {% block body %}{% endblock %}

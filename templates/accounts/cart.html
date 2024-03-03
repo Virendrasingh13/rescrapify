@@ -54,13 +54,13 @@
                             {% for cart_item in cart.cart_items.all %}
                             <tr class="rem2">
                                 <td class="invert">{{ forloop.counter }}</td>
-                                <td class="invert-image"><a href="product-single.html"><img src="../../media/{{cart_item.item.item_image.first.image}}" class="img-fluid radius-image" alt=""></a></td>
+                                <td class="invert-image"><a href="{% url 'products:get_product' cart_item.item.slug %}"><img src="../../media/{{cart_item.item.item_image.first.image}}" class="img-fluid radius-image" alt=""></a></td>
                                 <td class="invert">
                                     <div class="quantity">
                                         <div class="quantity-select">
-                                            <div class="entry value-minus">&nbsp;</div>
+                                            
                                             <div class="entry value"><span>1</span></div>
-                                            <div class="entry value-plus active">&nbsp;</div>
+                                            
                                         </div>
                                     </div>
                                 </td>
@@ -149,11 +149,11 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <button class="submit check_out btn btn-style btn-primary">Delivery to this Address</button>
+                                    <!-- <button class="submit check_out btn btn-style btn-primary">Delivery to this Address</button> -->
                                 </div>
                             </section>
                         </form>
-                        <div class="checkout-right-basket">
+                        <div class="checkout-right-basket text-center">
                             {% comment %} <a class="btn btn-style btn-primary" href="payment.html">Make a Payment <i class="fas fa-arrow-right ms-lg-3 ms-2"></i></a> {% endcomment %}
                             <button id="rzp-button1" class="btn btn-style btn-primary" >Pay with Razorpay <i class="fas fa-arrow-right ms-lg-3 ms-2"></i> </button> 
                         </div>
@@ -182,40 +182,6 @@
         "description": "Purchases",
         "image": "https://example.com/your_logo",
         "order_id": "{{ payment.id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-        "prefill":
-        {
-          "email": "gaurav.kumar@example.com",
-          "contact": +919900000000,
-        },
-       
-        config: {
-            display: {
-              blocks: {
-                banks: {
-                  name: 'All payment methods',
-                  instruments: [
-                    {
-                      method: 'upi'
-                    },
-                    {
-                      method: 'card'
-                    },
-                    {
-                        method: 'wallet'
-                    },
-                    {
-                        method: 'netbanking'
-                    }
-                  ],
-                },
-              },
-              sequence: ['block.banks'],
-              preferences: {
-                show_default_blocks: false,
-              },
-            },
-          },
-        
         "handler": function (response) {
 
             window.location.href = `{% url 'accounts:success' %}/?razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`;

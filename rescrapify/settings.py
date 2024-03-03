@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://e20b-2409-40c1-e-be6f-d8f9-f7b0-a9bf-cb6a.ngrok-free.app','http://localhost:8000']
+CSRF_TRUSTED_ORIGINS = ['https://a9f6-2409-40c1-3e-90aa-69ad-34ba-46ee-b7f0.ngrok-free.app','http://localhost:8000']
 
 # Application definition
 

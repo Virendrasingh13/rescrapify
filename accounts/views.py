@@ -10,6 +10,9 @@ from django.contrib import messages
 from helpers import generate_unique_hash
 from accounts.models import Cart,CartItems
 from products.models import Item
+import razorpay
+from django.conf import settings
+
 
 # from rest_framework.views import APIView
 # from rest_framework_simplejwt.tokens import RefreshToken
@@ -345,20 +348,43 @@ def forgot_password(request, forgot_password_token):
 
     
 def cart(request):
-    context = {'cart': Cart.objects.filter(is_paid=False,user= request.user).first()}
-    return render(request, 'accounts/cart.html', context)
+    
+    if request.user.is_authenticated:
+        
+        cart_obj = Cart.objects.filter(is_paid=False,user= request.user).first()
+        
+        amount = float(cart_obj.get_cart_total() * 100)
+        client = razorpay.Client(auth=(settings.RAZOR_PAY_KEY_ID, settings.RAZOR_PAY_KEY_SECRET))
+        data = { "amount": amount, "currency": "INR", 'payment_capture': 1}
+        payment = payment = client.order.create(data=data)
+        cart_obj.razor_pay_order_id = payment['id']
+        cart_obj.save()
+        print(payment)
+        
+        context = {'cart': cart_obj ,'payment':payment}
+        return render(request, 'accounts/cart.html', context)
+        
+    else :
+        messages.warning(request,'You need to be looged in to access cart')
+        return redirect('accounts:login')
 
 
 def add_to_cart(request, slug):
     try:
+        if request.user.is_authenticated:
+            item = Item.objects.filter(slug=slug).first()
+            user = request.user
+            cart , creatd = Cart.objects.get_or_create(user = user, is_paid=False)
+            
+            cart_items = CartItems.objects.create(cart = cart, item=item)
+            if cart_items:
+                messages.success(request,'Item added in cart successfully')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                raise Exception('There is some problem in adding cart')
         
-        item = Item.objects.filter(slug=slug).first()
-        user = request.user
-        cart , creatd = Cart.objects.get_or_create(user = user, is_paid=False)
-        
-        cart_items = CartItems.objects.create(cart = cart, item=item)
-        
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            raise Exception('You need to be logged in')
     
         
     except Exception as e:
@@ -369,12 +395,32 @@ def add_to_cart(request, slug):
 def remove_cart(request,slug):
     try:
         cart_item = CartItems.objects.filter(item__slug=slug).first()
-        cart_item.delete()
+        if cart_item:
+            cart_item.delete()
+            messages.success(request,'Item removed from cart successfully')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            raise Exception('There is some problem in removing cart')
         
     except Exception as e:
         print(e)
         messages.warning(request,str(e))
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         
+        
+def success(request):
+    
+    if 'razor_pay_order_id' in request.GET and 'razorpay_payment_id' in request.GET and 'razorpay_signature' in request.GET:
+        razor_pay_order_id = request.GET['razorpay_order_id']
+        razor_pay_payment_id = request.GET['razorpay_payment_id']
+        razor_pay_payment_signature = request.GET['razorpay_signature']
+    
+        cart_obj = Cart.objects.filter(razor_pay_order_id=razor_pay_order_id)
+        if cart_obj:
+            cart_obj.is_paid = True
+            cart_obj.razor_pay_payment_id = razor_pay_payment_id
+            cart_obj.razor_pay_payment_signature = razor_pay_payment_signature
+            cart.save()
+        return render(request,'success.html')
+    

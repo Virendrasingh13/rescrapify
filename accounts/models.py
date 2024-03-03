@@ -47,6 +47,10 @@ class CustomUser(AbstractUser):
 class Cart(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,related_name='carts')
     is_paid = models.BooleanField(default=False)
+    razor_pay_order_id = models.CharField( max_length=150,null=True, blank=True)
+    razor_pay_payment_id = models.CharField( max_length=150,null=True, blank=True)
+    razor_pay_payment_signature = models.CharField( max_length=150,null=True, blank=True)
+    
     
     def __str__(self) -> str:
         return self.user.email + " - cart"

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-<title>{% block title %}LOGIN - Re:scrapify{% endblock %}</title>
+<title>{% block title %}Cart - Re:scrapify{% endblock %}</title>
 {% block body %}
 
 <section class="w3mid-gap"></section>
@@ -17,7 +17,7 @@
                     <div class="w3breadcrumb-right">
                         <ul class="breadcrumbs-custom-path">
                             <li><a href="{% url 'home:home' %}">Home</a></li>
-                            <li class="active"><span class="fas fa-angle-double-right mx-2"></span>Checkout</li>
+                            <li class="active"><span class="fas fa-angle-double-right mx-2"></span>Cart - Checkout</li>
                         </ul>
                     </div>
                 </div>
@@ -154,7 +154,8 @@
                             </section>
                         </form>
                         <div class="checkout-right-basket">
-                            <a class="btn btn-style btn-primary" href="payment.html">Make a Payment <i class="fas fa-arrow-right ms-lg-3 ms-2"></i></a>
+                            {% comment %} <a class="btn btn-style btn-primary" href="payment.html">Make a Payment <i class="fas fa-arrow-right ms-lg-3 ms-2"></i></a> {% endcomment %}
+                            <button id="rzp-button1" class="btn btn-style btn-primary" >Pay with Razorpay <i class="fas fa-arrow-right ms-lg-3 ms-2"></i> </button> 
                         </div>
                     </div>
                     {% endif %}
@@ -166,5 +167,81 @@
 
 </section>
 <div style="margin: 7px auto; display: block; text-align:center;">
+
+{% endblock %}
+
+{% block js %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    var options = {
+        "key": "rzp_test_TqHFum4mPJRzWx", // Enter the Key ID generated from the Dashboard
+        "amount": "{{ payment.amount }}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        "currency": "INR",
+        "name": "RESCAPIFY",
+        "description": "Purchases",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{ payment.id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        "prefill":
+        {
+          "email": "gaurav.kumar@example.com",
+          "contact": +919900000000,
+        },
+       
+        config: {
+            display: {
+              blocks: {
+                banks: {
+                  name: 'All payment methods',
+                  instruments: [
+                    {
+                      method: 'upi'
+                    },
+                    {
+                      method: 'card'
+                    },
+                    {
+                        method: 'wallet'
+                    },
+                    {
+                        method: 'netbanking'
+                    }
+                  ],
+                },
+              },
+              sequence: ['block.banks'],
+              preferences: {
+                show_default_blocks: false,
+              },
+            },
+          },
+        
+        "handler": function (response) {
+
+            window.location.href = `{% url 'accounts:success' %}/?razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`;
+            alert(response.razorpay_payment_id);
+            alert(response.razorpay_order_id);
+            alert(response.razorpay_signature)
+        },
+       
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    });
+    document.getElementById('rzp-button1').onclick = function(e){
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
 
 {% endblock %}

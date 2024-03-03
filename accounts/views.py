@@ -353,6 +353,8 @@ def cart(request):
         cart_obj = Cart.objects.filter(is_paid=False,user= request.user).first()
         
         amount = float(cart_obj.get_cart_total() * 100)
+        if amount < 100:
+            amount = 100
         client = razorpay.Client(auth=(settings.RAZOR_PAY_KEY_ID, settings.RAZOR_PAY_KEY_SECRET))
         data = { "amount": amount, "currency": "INR", 'payment_capture': 1}
         payment = payment = client.order.create(data=data)

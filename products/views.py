@@ -13,24 +13,25 @@ def sellProduct(request):
             try:
                 body = request.POST
                 print(body)
-                if 'category_slug' in body and 'item_name' in body and 'price' in body and 'item_image' in request.FILES  and 'description' in body:
+                if 'category_slug' in body and 'item_name' in body and 'price' in body and 'item_image1' in request.FILES and 'item_image2' in request.FILES and 'description' in body:
                     item_name = body['item_name']
                     category_slug = body['category_slug']
                     price = body['price']
-                    item_image = request.FILES.get('item_image')
+                    item_image1 = request.FILES.get('item_image1')
+                    item_image2 = request.FILES.get('item_image2')
+                    
                     description = body['description']
                     user = request.user
                     print(user)
-                    if item_image.size > 1*1024*1024:
+                    if item_image1.size > 1*1024*1024 or  item_image2.size > 1*1024*1024:
                             raise Exception('Image size should be less than 1MB')
                         
                     category_obj = Category.objects.filter(slug=category_slug).first()
                     item_obj,created = Item.objects.get_or_create(item_name= item_name, seller=user, price=price,category_name=category_obj)
                     if created:
                         item_obj.description = description
-                        item_image_obj = Item_image.objects.create(item=item_obj)
-                        item_image_obj.image = item_image
-                        item_image_obj.save()
+                        item_image_obj1 = Item_image.objects.create(item=item_obj,image = item_image1)
+                        item_image_obj2 = Item_image.objects.create(item=item_obj,image = item_image2)
                         item_obj.save()
                         messages.success(request,'Product added for sell successfully.')
                         return redirect('products:sell_product')

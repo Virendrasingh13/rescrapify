@@ -50,31 +50,31 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% if cart %}
-                            {% for cart_item in cart.cart_items.all %}
-                            <tr class="rem2">
-                                <td class="invert">{{ forloop.counter }}</td>
-                                <td class="invert-image"><a href="{% url 'products:get_product' cart_item.item.slug %}"><img src="../../media/{{cart_item.item.item_image.first.image}}" class="img-fluid radius-image" alt=""></a></td>
-                                <td class="invert">
-                                    <div class="quantity">
-                                        <div class="quantity-select">
-                                            
-                                            <div class="entry value"><span>1</span></div>
-                                            
+                            {% if cart.cart_items.count  > 0 %}
+                                {% for cart_item in cart.cart_items.all %}
+                                <tr class="rem2">
+                                    <td class="invert">{{ forloop.counter }}</td>
+                                    <td class="invert-image"><a href="{% url 'products:get_product' cart_item.item.slug %}"><img src="../../media/{{cart_item.item.item_image.first.image}}" class="img-fluid radius-image" alt=""></a></td>
+                                    <td class="invert">
+                                        <div class="quantity">
+                                            <div class="quantity-select">
+                                                
+                                                <div class="entry value"><span>1</span></div>
+                                                
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="invert">{{cart_item.item.item_name}}</td>
+                                    </td>
+                                    <td class="invert">{{cart_item.item.item_name}}</td>
 
-                                <td class="invert">{{cart_item.get_item_price}} <i class="fas fa-rupee-sign"></i></td>
-                                <td class="invert">
-                                    <div class="rem cls-btn text-center">
-                                        <a href="{% url 'accounts:remove_cart' cart_item.item.slug%}"><i class="far fa-window-close"></i></a>
-                                    </div>
+                                    <td class="invert">{{cart_item.get_item_price}} <i class="fas fa-rupee-sign"></i></td>
+                                    <td class="invert">
+                                        <div class="rem cls-btn text-center">
+                                            <a href="{% url 'accounts:remove_cart' cart_item.item.slug%}"><i class="far fa-window-close"></i></a>
+                                        </div>
 
-                                </td>
-                            </tr>
-                            {% endfor %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
 
                             {% else %}
 

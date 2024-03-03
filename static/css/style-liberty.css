@@ -25707,3 +25707,9 @@ div#owl-demo2 .owl-dots {
     border-radius: 4px;
     resize: none;
 }
+
+
+.cpton{
+    grid-template-columns: 1fr;
+    grid-gap: 4px;
+}

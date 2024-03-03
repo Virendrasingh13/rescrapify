@@ -87,51 +87,7 @@
                         
                         
                         <!-- Modal -->
-                        <!-- <div class="modal fade" id="chngpassmodal" tabindex="-1" aria-labelledby="chngpassmodallabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                <h6 class="modal-title title-subw3hny" id="exampleModalLabel">Change Password - {{request.user}}</h6>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form method="post" class="signin-form" id="password-change-form" autocomplete="off">
-                                        {% csrf_token %}
-                                        {% comment %} {% if messages %}
-                                                {% for message in messages %}
-                                                <div class="alert alert-{% if message.tags %}{{ message.tags }} {% endif %}" role="alert">
-                                                    {{ message }}
-                                                  </div>
-                                                  {% endfor %}      
-                                            {% endif %} {% endcomment %}
-                                        <div class="" >
-                                            <div>
-                                            <input type="text"  name="cur_password" id="cur_password" placeholder="Current Password*" class="contact-input"
-                                                required>
-                                                <span class="toggle-password fas fa-eye-slash" toggle="#confirm_password"></span>
-                                            </div>
-                                            <div>
-                                            <input type="text" name="new_password" id="new_password" placeholder="New Password*" class="contact-input"
-                                                required>
-                                                <span class="toggle-password fas fa-eye-slash" toggle="#confirm_password"></span>
-                                            </div>
-                                            <div>
-                                            <input type="text" name="confirm_password" id="confirm_password" placeholder="Confirm Password*" class="contact-input"
-                                                required>
-                                                <span class="toggle-password fas fa-eye-slash" toggle="#confirm_password"></span>
-                                            </div>
-                                            <div id="password-error" class="text-danger"></div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary" >Update Password</button>
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        </div>
-                                    </form>
-                                </div>
-                                
-                            </div>
-                            </div>
-                        </div> -->
+                       
                         <div class="modal fade" id="chngpassmodal" tabindex="-1" aria-labelledby="chngpassmodallabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -142,15 +98,6 @@
                                     <div class="modal-body">
                                         <form method="post" class="signin-form" id="password-change-form" autocomplete="off">
                                             {% csrf_token %}
-                                            {% comment %}
-                                            {% if messages %}
-                                            {% for message in messages %}
-                                            <div class="alert alert-{% if message.tags %}{{ message.tags }} {% endif %}" role="alert">
-                                                {{ message }}
-                                            </div>
-                                            {% endfor %}
-                                            {% endif %}
-                                            {% endcomment %}
                                             <div class="form-sub-w3">
                                                 <input type="password" name="cur_password" id="cur_password" placeholder="Current Password*" class="w-75 contact-input" required>
                                                 <span class="toggle-password fas fa-eye"></span>

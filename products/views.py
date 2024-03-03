@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render,redirect
-from .models import Category,Item
+from .models import Category,Item,Item_image
 from django.contrib import messages
+
 
 # Create your views here.
 def sellProduct(request):
@@ -27,8 +28,9 @@ def sellProduct(request):
                     item_obj,created = Item.objects.get_or_create(item_name= item_name, seller=user, price=price,category_name=category_obj)
                     if created:
                         item_obj.description = description
-                        item_obj.image = item_image
-                        
+                        item_image_obj = Item_image.objects.create(item=item_obj)
+                        item_image_obj.image = item_image
+                        item_image_obj.save()
                         item_obj.save()
                         messages.success(request,'Product added for sell successfully.')
                         return redirect('products:sell_product')
@@ -66,4 +68,15 @@ def get_categories_by_type(request):
     except Exception as e:
         print(e)
         return JsonResponse({'success':False,'message':str(e)})
+
+        
+def get_product(request, slug):
+    
+    try:
+        
+        item = Item.objects.filter(slug=slug).first()
+        context = {'item':item}
+        return render(request, 'products/product.html',context)
+    except Exception as e:
+        print(e)
         

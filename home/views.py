@@ -3,9 +3,48 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from helpers import send_Contact_mail
 from django.contrib import messages
+from products.models import Item
 # Create your views here.
 def home(request):
-    return render(request, 'home.html')
+    
+    context = {'items': Item.objects.all()}
+    return render(request, 'home.html',context)
+
+
+def get_items_by_category(request):
+    
+    if request.method == "GET":
+        
+        try:
+        
+            if 'category' in request.GET:
+                category_type = request.GET['category']
+                items_obj = Item.objects.filter(category_name__category_type =  category_type)
+                if items_obj:
+                    items = [{
+                        'item_name':item .item_name,
+                        'price' : item.price,
+                        'slug' : item.slug,
+                        'image' : item.item_image.first().image.url if item.item_image.exists() else None,
+                    } for item in items_obj]
+                    print(items)
+                    return JsonResponse({'success':True,'items':items})
+        
+            items_obj = Item.objects.all()
+            
+            items = [{
+                        'item_name':item .item_name,
+                        'price' : item.price,
+                        'slug' : item.slug,
+                        'image' : item.item_image.first().image.url if item.item_image.exists() else None,
+                    } for item in items_obj]
+            return JsonResponse({'success':True,'items':items})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'success':False,'message':str(e)})
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
 
 def about(request):
     return render(request, 'about.html')

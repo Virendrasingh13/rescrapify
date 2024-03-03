@@ -16,6 +16,9 @@
             rel="stylesheet" type="text/css">
         <!-- Template CSS -->
         <link rel="stylesheet" href="{% static 'css/style-liberty.css' %}" type="text/css">
+        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         {% block script%}
 
         {%endblock%}
@@ -24,9 +27,9 @@
     </head>
 
     <body>
-
+        
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-        <!-- <script>
+        <script>
             (function () {
                 if (typeof _bsa !== 'undefined' && _bsa) {
                     // format, zoneKey, segment:value, options
@@ -49,7 +52,7 @@
                     _bsa.init('stickybox', 'CKYI653J', 'placement:w3layoutscom');
                 }
             })();
-        </script> -->
+        </script>
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src='https://www.googletagmanager.com/gtag/js?id=G-98H8KRKT85'></script>
         <script>
@@ -247,17 +250,7 @@ RIGHT SIDEBAR TOGGLE SECTION
                         <div class="collapse navbar-collapse overflow-hidden" id="navbarScroll">
                             <ul class="navbar-nav me-lg-auto my-2 my-lg-0 navbar-nav-scroll">
                                 <li class="nav-item">
-                                    <a class="nav-link  {% if request.resolver_match.url_name == 'hom--e' %}active{% endif %}" aria-current="page" href="{% url 'home:home' %}">Home</a>
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#Pages" id="navbarDropdown1" role="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        Buy <span class="fa fa-angle-down ms-1"></span>
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown1">
-                                        <li><a class="dropdown-item pt-2" href="">Creativity</a></li>
-                                        <li><a class="dropdown-item" href="">Scrapyard</a></li>
-                                    </ul>
+                                    <a class="nav-link  {% if request.resolver_match.url_name == 'home' %}active{% endif %}" aria-current="page" href="{% url 'home:home' %}">Home</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link  {% if request.resolver_match.url_name == 'sell_product' %}active{% endif %}" 
@@ -302,8 +295,8 @@ RIGHT SIDEBAR TOGGLE SECTION
                                 </button>
                                 <!-- Profile Dropdown Menu -->
                                 <ul class="nav-mb dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item pt-2" href="{% url 'accounts:edit_profile' %}" >Edit Profile</a></li>
-                                    <li><a class="dropdown-item" href="#">Cart</a></li>
+                                    <li><a class="dropdown-item pt-2 {% if request.resolver_match.url_name == 'edit_profile' %}active{% endif %}" href="{% url 'accounts:edit_profile' %}" >Edit Profile</a></li>
+                                    <li><a class="dropdown-item " href="{% url 'accounts:cart'%}">Cart - {{request.user.get_cart_count}}</a> </li>
                                     <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a></li>
                                 </ul>
                             </li>
@@ -316,8 +309,8 @@ RIGHT SIDEBAR TOGGLE SECTION
                                 </button>
                                 <!-- Profile Dropdown Menu -->
                                 <ul class=" nav-mb dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item pt-2" href="{% url 'accounts:login' %}">Login</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'accounts:register' %}">Sign-Up</a></li>
+                                    <li><a class="dropdown-item pt-2 {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'accounts:login' %}">Login</a></li>
+                                    <li><a class="dropdown-item {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'accounts:register' %}">Sign-Up</a></li>
                                 </ul>
                             </li>
                             {% endif %}
@@ -398,10 +391,11 @@ RIGHT SIDEBAR TOGGLE SECTION
                         </div>
                         <div class="row bottom-copies mb-3">
                             <div class="copy-footer-29 col-lg-8">
-                                <p class="d-sm-block d-lg-inline">© Designed by <a href="https://w3layouts.com/"
-                                    target="_blank">W3Layouts</a>
+                                <p class="d-sm-block d-lg-inline">© Designed by 
+                                    <a href="https://w3layouts.com/" target="_blank">W3Layouts</a>
                                 </p>
-                                <p class="d-sm-block d-lg-inline"> Developed By <a href="">HARSH</a>
+                                <p class="d-sm-block d-lg-inline"> Developed By 
+                                    <a href="https://www.linkedin.com/in/hrsh-hp/" target="_blank">HARSH</a>
                                 </p>
                                 
                             </div>
@@ -451,6 +445,42 @@ RIGHT SIDEBAR TOGGLE SECTION
             <!-- Template JavaScript -->
             <script src="{%static 'js/jquery-3.3.1.min.js'%}"></script>
             <script src="{%static 'js/theme-change.js'%}"></script>
+            <!-- price range (top products) -->
+            <script src="{%static 'js/jquery-1.11.1.min.js'%}"></script>
+            <script src="{%static 'js/jquery-ui.js'%}"></script>
+            <script>
+                //<![CDATA[ 
+                $(window).load(function () {
+                    $("#slider-range").slider({
+                        range: true,
+                        min: 0,
+                        max: 9000,
+                        values: [50, 6000],
+                        slide: function (event, ui) {
+                            $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                        }
+                    });
+                    $("#amount").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
+
+                }); //]]>
+
+            </script>
+            <!-- //price range (top products) -->
+            <!-- single -->
+            <script src="{%static 'js/jquery.flexslider.js' %}"></script>
+            <script src="{%static 'js/imagezoom.js'%}"></script>
+            <!-- single -->
+            <script>
+                // Can also be used with $(document).ready()
+                $(window).load(function() {
+                    $('.flexslider1').flexslider({
+                        animation: "slide",
+                        controlNav: "thumbnails"
+                    });
+                });
+
+            </script>
+
             <!-- cart-js -->
             <script src="{%static 'js/minicart.js'%}"></script>
             <script>
@@ -473,6 +503,8 @@ RIGHT SIDEBAR TOGGLE SECTION
             <script>
                 
             </script>
+
+            
             <!-- script for banner slider-->
             <script>
                 $(document).ready(function () {
@@ -620,7 +652,7 @@ RIGHT SIDEBAR TOGGLE SECTION
             </script>
             <!-- //disable body scroll which navbar is in active -->
 
-            <!-- //bootstrap -->
+             <!-- //bootstrap -->
             <script src="{%static 'js/bootstrap.min.js'%}"></script>
 
             <script>

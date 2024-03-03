@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}
+<title>{% block title %}LOGIN - Re:scrapify{% endblock %}</title>
+{% block body %}
+
+<section class="w3mid-gap"></section>
+    <!--/Banner-Start-->
+    <!--/inner-page-->
+    <div class="inner-banner py-5">
+        <section class="w3l-breadcrumb text-left py-sm-5 ">
+            <div class="container">
+                <div class="w3breadcrumb-gids">
+                    <div class="w3breadcrumb-left text-left">
+                        <h2 class="inner-w3-title">
+                            Home </h2>
+                    </div>
+                    <div class="w3breadcrumb-right">
+                        <ul class="breadcrumbs-custom-path">
+                            <li><a href="{% url 'home:home' %}">Home</a></li>
+                            <li class="active"><span class="fas fa-angle-double-right mx-2"></span>Checkout</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+<section class="w3l-ecommerce-main">
+
+    <!-- /products-->
+    
+    <div class="ecom-contenthny py-5">
+        <div class="container py-lg-5">
+            <!-- about -->
+            <div class="ecom-contenthny-w3lcheckout privacy">
+                <h3>Chec<span>kout</span></h3>
+                <div class="checkout-right">
+                    <p class="mb-5">Your shopping cart contains: <span>{{request.user.get_cart_count}} Products</span></p>
+                    <table class="timetable_sub">
+                        <thead>
+                            <tr>
+                                <th>SL No.</th>
+                                <th>Product</th>
+                                <th>Quality</th>
+                                <th>Product Name</th>
+
+                                <th>Price</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if cart %}
+                            {% for cart_item in cart.cart_items.all %}
+                            <tr class="rem2">
+                                <td class="invert">{{ forloop.counter }}</td>
+                                <td class="invert-image"><a href="product-single.html"><img src="../../media/{{cart_item.item.item_image.first.image}}" class="img-fluid radius-image" alt=""></a></td>
+                                <td class="invert">
+                                    <div class="quantity">
+                                        <div class="quantity-select">
+                                            <div class="entry value-minus">&nbsp;</div>
+                                            <div class="entry value"><span>1</span></div>
+                                            <div class="entry value-plus active">&nbsp;</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="invert">{{cart_item.item.item_name}}</td>
+
+                                <td class="invert">{{cart_item.get_item_price}} <i class="fas fa-rupee-sign"></i></td>
+                                <td class="invert">
+                                    <div class="rem cls-btn text-center">
+                                        <a href="{% url 'accounts:remove_cart' cart_item.item.slug%}"><i class="far fa-window-close"></i></a>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            {% endfor %}
+
+                            {% else %}
+
+                            <tr class="rem2">
+                                <td class="invert" colspan="6">There's nothing in your cart</td>
+                            </tr>
+                            {% endif %}
+                            
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row checkout-left mt-5">
+                    {% comment %} <div class="col-md-4 checkout-left-basket">
+                        <h4>Continue to basket</h4>
+                        <ul>
+                            {% for cart_item in cart.cart_items.all %}
+                            <li>Product {{ forloop.counter }}<i> - </i> <span>{{ cart_item.get_item_price}}</span></li>
+                            {% endfor %}
+                            <li>Total Service Charges <i>-</i> <span>$10.00</span></li>
+                            <li>Total <i>-</i> <span>{{cart.get_cart_total}}</span></li>
+                        </ul>
+                    </div> {% endcomment %}
+                    {% if cart %}
+                    <div class="col-md-4 checkout-left-basket">
+                        <h4>Continue to basket</h4>
+                        <ul>
+
+                            {% for cart_item in cart.cart_items.all %}
+                            <li>Product {{ forloop.counter }} <i>-</i> <span>{{ cart_item.get_item_price}} <i class="fas fa-rupee-sign"></i></span></li>
+                            {% endfor %}
+                        
+                            <li class="total">Total <i>-</i> <span>{{cart.get_cart_total}} <i class="fas fa-rupee-sign"></i></span></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-8 address_form_agile ps-lg-5">
+                        <h4>Add a new Details</h4>
+                        <form action="https://p.w3layouts.com/demos_new/template_demo/07-12-2021/shoppykart-liberty-demo_Free/1589417704/web/payment.html" method="post" class="creditly-card-form agileinfo_form mt-4">
+                            <section class="creditly-wrapper wthree, w3_agileits_wrapper">
+                                <div class="information-wrapper">
+                                    <div class="first-row form-group">
+                                        <div class="controls">
+
+                                            <input class="billing-address-name form-control" type="text" name="name" placeholder="Full name">
+                                        </div>
+                                        <div class="w3_agileits_card_number_grids">
+                                            <div class="w3_agileits_card_number_grid_left">
+                                                <div class="controls">
+
+                                                    <input class="form-control" type="text" placeholder="Mobile number">
+                                                </div>
+                                            </div>
+                                            <div class="w3_agileits_card_number_grid_right">
+                                                <div class="controls">
+
+                                                    <input class="form-control" type="text" placeholder="Landmark">
+                                                </div>
+                                            </div>
+                                            <div class="clear"> </div>
+                                        </div>
+                                        <div class="controls">
+
+                                            <input class="form-control" type="text" placeholder="Town/City">
+                                        </div>
+                                        <div class="controls">
+
+                                            <select class="form-control option-w3ls">
+                                                <option>Office</option>
+                                                <option>Home</option>
+                                                <option>Commercial</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button class="submit check_out btn btn-style btn-primary">Delivery to this Address</button>
+                                </div>
+                            </section>
+                        </form>
+                        <div class="checkout-right-basket">
+                            <a class="btn btn-style btn-primary" href="payment.html">Make a Payment <i class="fas fa-arrow-right ms-lg-3 ms-2"></i></a>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- //about -->
+        </div>
+    </div>
+
+</section>
+<div style="margin: 7px auto; display: block; text-align:center;">
+
+{% endblock %}

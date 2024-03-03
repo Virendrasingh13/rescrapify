@@ -4,10 +4,12 @@ from django.urls import reverse
 from accounts.models import CustomUser
 from django.contrib.auth import get_user_model,login,logout,authenticate
 from django.views.decorators.csrf import csrf_exempt
-from helpers import send_email_token
+from helpers import send_email_token,send_password_email
 import json
 from django.contrib import messages
 from helpers import generate_unique_hash
+from accounts.models import Cart,CartItems
+from products.models import Item
 
 # from rest_framework.views import APIView
 # from rest_framework_simplejwt.tokens import RefreshToken
@@ -233,14 +235,18 @@ def change_password(request):
                 new_password = body['new_password']
                 
                 user = authenticate(request, email=request.user.email, password=cur_password)   
-                if user:
-                    user.set_password(new_password)
-                    user.save()
-                    # messages.success(request, 'Password changed successfully, You have to login again')
-                    return JsonResponse({'success':True, 'message':'Password changed successfully, You have to login again'})
                 
+                if user :
+                    if not user.is_superuser:
+                        user.set_password(new_password)
+                        user.save()
+                        # messages.success(request, 'Password changed successfully, You have to login again')
+                        return JsonResponse({'success':True, 'message':'Password changed successfully, You have to login again'})
+                    
+                    else:
+                        raise Exception('You can not send this request')
                 else:
-                    raise Exception('Invalid password!')    
+                    raise Exception('Invalid password !')
                 
             else:
                 raise Exception('Insufficient credentials')   
@@ -264,15 +270,17 @@ def change_email(request):
                 
                 if cur_email == request.user.email:
                     user = User.objects.filter(email=cur_email).first()
-                    
-                    user.slug = generate_unique_hash()
-                    user.temp_email = new_email
-                    user.save()
-                    email_sent = send_email_token(new_email, user.slug)
-                    if email_sent:
-                        return JsonResponse({'success':True, 'message':'Verification is sent on your new email'})
+                    if not user.is_superuser:
+                        user.slug = generate_unique_hash()
+                        user.temp_email = new_email
+                        user.save()
+                        email_sent = send_email_token(new_email, user.slug)
+                        if email_sent:
+                            return JsonResponse({'success':True, 'message':'Verification is sent on your new email'})
+                        else:
+                            raise Exception('There is some problem in sending mail')
                     else:
-                        raise Exception('There is some problem in sending mail')
+                        raise Exception('You can not send this request')
                     
                 else:
                     raise Exception('Invalid current email!')
@@ -285,4 +293,88 @@ def change_email(request):
     else:
         return redirect('accounts:edit_profile')
        
+def check_email(request):
+    if request.method == "POST":
+        try: 
+            if 'cur_email' in request.POST:
+                email = request.POST['cur_email']     
+                user = User.objects.filter(email=email).first()
+                
+                if user and not user.is_superuser:
+                    user.forgot_password_token = generate_unique_hash()
+                    user.save()
+                    email_sent = send_password_email(email,user.forgot_password_token)
+                    if email_sent:
+                        return JsonResponse({'success':True, 'message':'A email it sent to your email id'})
+                    else:
+                        raise Exception('There is some problem in sending mail')
+            else:
+                raise Exception('Don not try anything funny with email!')
+            
+        except Exception as e:
+            print(e)
+            # messages.warning(request,str(e))
+            # return HttpResponseRedirect(request.path_info)
+            
+    else:
+        return redirect('home:home')
+    
+def forgot_password(request, forgot_password_token):
+    try:
+        user = User.objects.filter(forgot_password_token=forgot_password_token).first()
+        if user and not user.is_superuser:  
+            if request.method == "POST":
+                if 'new_password' in request.POST:
+                    new_pass = request.POST['new_password']
+                    user.set_password(new_pass)
+                    user.save()
+                    return JsonResponse({'success':True, 'message':'Password changed successfully, You have to login again'})
+                else:
+                    raise Exception('Do not try anything funny with the password')
+                
+                                
+            return render(request, 'accounts/forgot_password.html')
+        
+        else:
+            raise Exception('Invalid verfication link')
+        
+    except Exception as e:
+        print(e)
+        messages.warning(request,str(e))
+        return redirect('accounts:forgot_password',forgot_password_token=forgot_password_token)
+
+    
+def cart(request):
+    context = {'cart': Cart.objects.filter(is_paid=False,user= request.user).first()}
+    return render(request, 'accounts/cart.html', context)
+
+
+def add_to_cart(request, slug):
+    try:
+        
+        item = Item.objects.filter(slug=slug).first()
+        user = request.user
+        cart , creatd = Cart.objects.get_or_create(user = user, is_paid=False)
+        
+        cart_items = CartItems.objects.create(cart = cart, item=item)
+        
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+        
+    except Exception as e:
+        print(e)
+        messages.warning(request,str(e))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+def remove_cart(request,slug):
+    try:
+        cart_item = CartItems.objects.filter(item__slug=slug).first()
+        cart_item.delete()
+        
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
+    except Exception as e:
+        print(e)
+        messages.warning(request,str(e))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         

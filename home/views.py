@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from helpers import send_Contact_mail
 from django.contrib import messages
-from products.models import Item
+from products.models import Item,Category
 # Create your views here.
 def home(request):
     
@@ -27,7 +27,7 @@ def get_items_by_category(request):
                         'slug' : item.slug,
                         'image' : item.item_image.first().image.url if item.item_image.exists() else None,
                     } for item in items_obj]
-                    print(items)
+
                     return JsonResponse({'success':True,'items':items})
         
             items_obj = Item.objects.all()

@@ -1,7 +1,7 @@
 from django.http import JsonResponse,HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.urls import reverse
-from accounts.models import CustomUser, LikedProducts
+from accounts.models import CustomUser, LikedProducts, order
 from django.contrib.auth import get_user_model,login,logout,authenticate
 from django.views.decorators.csrf import csrf_exempt
 from helpers import send_email_token,send_password_email
@@ -416,31 +416,94 @@ def remove_cart(request,slug):
         
         
 def success(request):
+    try: 
+        if request.method == "POST":
+            body = request.POST
+            print(body)
+            
+            if 'razorpay_order_id' in body and 'razorpay_payment_id' in body and 'razorpay_signature' in body :
+                razor_pay_order_id = body['razorpay_order_id']
+                razor_pay_payment_id = body['razorpay_payment_id']
+                razor_pay_payment_signature = body['razorpay_signature']
+            
+                cart_obj = Cart.objects.filter(razor_pay_order_id=razor_pay_order_id).first()
+                print(cart_obj)
+                if cart_obj:
+                    
+                    amount = cart_obj.get_cart_total()
+                    cart_obj.is_paid = True
+                    cart_obj.razor_pay_payment_id = razor_pay_payment_id
+                    cart_obj.razor_pay_payment_signature = razor_pay_payment_signature
+                    cart_obj.save()
+                    name = body['name']
+                    email = body['email']
+                    phone_no = body['phone_no']
+                    city = body['city']
+                    address = body['address']
+                    
+                    
+                    order_obj,created = order.objects.get_or_create(order_id = razor_pay_order_id,cart=cart_obj)
+                    if created:
+                        order_obj.user = request.user
+                        order_obj.bill_name = name
+                        order_obj.email = email
+                        order_obj.phone_no = phone_no
+                        order_obj.address = address
+                        order_obj.city = city
+                        order_obj.amount = amount
+                        order_obj.save()
+                    
+                        return JsonResponse({'success':True})
+                    
+                    else:
+                        raise Exception('This order is already exist')
+                
+                else:
+                    raise Exception("There is some error in order")
+        
+            else:
+                raise Exception("Don't try to direct go to success page")
+            
+            
+        else:
+            print(request.GET)
+            if 'razorpay_order_id' in request.GET:
+                order_id = request.GET['razorpay_order_id']
+                context = {'order_id':order_id}
+                return render(request,'success.html',context)
+            
+            else:
+                raise Exception('order id should be provided')
+        
+    except Exception as e:
+        print(e)
+        messages.warning(request, str(e))
+        return JsonResponse({'success':False})
     
-    if 'razorpay_order_id' in request.GET and 'razorpay_payment_id' in request.GET and 'razorpay_signature' in request.GET :
-        razor_pay_order_id = request.GET['razorpay_order_id']
-        razor_pay_payment_id = request.GET['razorpay_payment_id']
-        razor_pay_payment_signature = request.GET['razorpay_signature']
     
-        cart_obj = Cart.objects.filter(razor_pay_order_id=razor_pay_order_id).first()
-        print(cart_obj)
-        if cart_obj:
-            cart_obj.is_paid = True
-            cart_obj.razor_pay_payment_id = razor_pay_payment_id
-            cart_obj.razor_pay_payment_signature = razor_pay_payment_signature
-            cart_obj.save()
-        return render(request,'accounts/success.html')
-    
-    else:
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
-    
+def invoice(request,order_id):
+    try:
+        order_obj = order.objects.filter(order_id=order_id).first()
+        if order_obj:
+            context = {'order':order_obj}
+            return render(request, 'invoice.html',context)
+        else:
+            raise Exception('Invalid order id')
+            
+        
+    except Exception as e:
+        print(e)
+
 def user_product(request):
-    if request.method == "GET":
-        items_obj = Item.objects.filter(seller = request.user)
-        print(items_obj)
-        context = {'items':items_obj}
-        return render(request, 'accounts/user_products.html',context)
+    if request.user.is_authenticated:
+        if request.method == "GET":
+            items_obj = Item.objects.filter(seller = request.user)
+            print(items_obj)
+            context = {'items':items_obj}
+            return render(request, 'accounts/user_products.html',context)
+    else:
+        messages.warning(request, "You need to login")
+        return redirect('accounts:login') 
     
     
     

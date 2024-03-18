@@ -52,7 +52,7 @@ class Cart(models.Model):
     
     
     def __str__(self) -> str:
-        return self.user.email + " - cart"
+        return self.user.email + " - cart" 
     
     def get_cart_total(self):
         cart_items = CartItems.objects.filter(cart__is_paid=False)
@@ -60,7 +60,7 @@ class Cart(models.Model):
         for cart_item in cart_items:
             price.append(cart_item.item.price)
             
-        return sum(price)
+        return sum(price) 
     
     
 class CartItems(models.Model):
@@ -83,3 +83,27 @@ class LikedProducts(models.Model):
     
     def __str__(self):
         return self.user.email + " liked " + self.item.item_name
+    
+class order(models.Model):
+    email = models.EmailField( max_length=254,null=True,blank=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="ordered",null=True,blank=True)
+    bill_name = models.CharField(max_length=200,null=True,blank=True)
+    phone_no = models.IntegerField(validators=[MaxValueValidator(999999999999),MinValueValidator(000000000000)],null=True, blank=True,default=None)
+    created_at = models.DateTimeField(auto_now_add=True)
+    order_id =  models.CharField( max_length=150,null=True, blank=True)
+    address = models.TextField(null=True, blank=True,default=None)
+    city = models.CharField(max_length=150,null=True, blank=True,default=None)
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE,related_name="order_cart")
+    amount = models.DecimalField(max_digits=10, decimal_places=2, default= 0.00)
+    
+    def save(self,*args, **kwargs):
+        if not self.slug:
+            self.slug = generate_unique_hash()
+        super(order, self).save(*args, **kwargs)
+        
+    def __str__(self) -> str:
+        return self.order_id
+    
+    def name(self):
+        return self.order_id

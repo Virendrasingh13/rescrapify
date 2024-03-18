@@ -74,7 +74,7 @@
                                 </form> {% endcomment %}
                                 <a class="shopv-cart pshopv-cart add-to-cart btn btn-style btn-primary" href="{% url 'accounts:add_to_cart' item.slug %}">Add to Cart</a>
                             </div>
-                            <div class="buyhny-now"> <a href="#buy" class="btn btn-style btn-primary">Buy Now </a></div>
+                            
 
                         </div>
                     </div>
@@ -83,33 +83,25 @@
                         </h3>
                         <div class="caption">
 
-                            <ul class="rating-single">
-                                <li>
-                                    <a href="#">
-                                        <span class="fa fa-star yellow-star" aria-hidden="true"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <span class="fa fa-star yellow-star" aria-hidden="true"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <span class="fa fa-star yellow-star" aria-hidden="true"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <span class="fa fa-star-half-o yellow-star" aria-hidden="true"></span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <span class="fa fa-star-half yellow-star" aria-hidden="true"></span>
-                                    </a>
-                                </li>
-                            </ul>
+                            <span class="item_price">
+                                {% if request.user.is_authenticated %}
+                                {% for liked in item.liked_by.all %}
+                                    {% if liked.user == request.user %}
+                                    <i class="0 heart-icon fas fa-thumbs-down" data-slug="{{ item.slug }}" aria-hidden="true"></i>
+                                    {% else %}
+                                        {% if forloop.last %}
+                                        <i class="1 heart-icon fas fa-thumbs-up" data-slug="{{ item.slug }}" aria-hidden="true"></i>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% empty %}
+                                    <i class="2 heart-icon price fas fa-thumbs-up" data-slug="{{ item.slug }}" aria-hidden="true"></i>
+                                    {% endfor %}
+                                    
+                            {% else %}
+                                <i class="4 heart-icon price fas fa-thumbs-up" data-slug="{{ item.slug }}" aria-hidden="true"></i>
+                            {% endif %}
+
+                                {{item.likes}}</span>
 
                             <h6>
                                 <span class="item_price">{{item.price}} <i class="fas fa-rupee-sign"></i></span>
@@ -167,6 +159,16 @@
     </section>
 
 
-    {% endblock %}
+{% endblock %}
+{% block js %}
 
+    
+<script>
+    var path =  "{% url 'accounts:like_product' %}";
+    var cur_path = "{{ request.path }}";
+    console.log(path);
+</script>
+<script src="{% static 'js/like_product.js' %}"></script>
+
+{% endblock js %}
    

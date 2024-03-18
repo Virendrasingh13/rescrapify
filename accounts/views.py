@@ -1,14 +1,14 @@
 from django.http import JsonResponse,HttpResponseRedirect
 from django.shortcuts import render,redirect
 from django.urls import reverse
-from accounts.models import CustomUser
+from accounts.models import CustomUser, LikedProducts
 from django.contrib.auth import get_user_model,login,logout,authenticate
 from django.views.decorators.csrf import csrf_exempt
 from helpers import send_email_token,send_password_email
 import json
 from django.contrib import messages
 from helpers import generate_unique_hash
-from accounts.models import Cart,CartItems
+from accounts.models import Cart,CartItems,LikedProducts
 from products.models import Item
 import razorpay
 from django.conf import settings
@@ -351,19 +351,24 @@ def cart(request):
     if request.user.is_authenticated:
         
         cart_obj = Cart.objects.filter(is_paid=False,user= request.user).first()
-        
-        amount = float(cart_obj.get_cart_total() * 100)
-        if amount < 100:
+        if cart_obj:
+            amount = float(cart_obj.get_cart_total() * 100)
+           
+            if amount < 100:
+                amount = 100
+            client = razorpay.Client(auth=(settings.RAZOR_PAY_KEY_ID, settings.RAZOR_PAY_KEY_SECRET))
+            data = { "amount": amount, "currency": "INR", 'payment_capture': 1}
+            payment = payment = client.order.create(data=data)
+            cart_obj.razor_pay_order_id = payment['id']
+            cart_obj.save()
+            print(payment)
+            
+            context = {'cart': cart_obj ,'payment':payment}
+            return render(request, 'accounts/cart.html', context)
+        else:
             amount = 100
-        client = razorpay.Client(auth=(settings.RAZOR_PAY_KEY_ID, settings.RAZOR_PAY_KEY_SECRET))
-        data = { "amount": amount, "currency": "INR", 'payment_capture': 1}
-        payment = payment = client.order.create(data=data)
-        cart_obj.razor_pay_order_id = payment['id']
-        cart_obj.save()
-        print(payment)
-        
-        context = {'cart': cart_obj ,'payment':payment}
-        return render(request, 'accounts/cart.html', context)
+            
+            return render(request, 'accounts/cart.html') 
         
     else :
         messages.warning(request,'You need to be looged in to access cart')
@@ -412,16 +417,71 @@ def remove_cart(request,slug):
         
 def success(request):
     
-    if 'razor_pay_order_id' in request.GET and 'razorpay_payment_id' in request.GET and 'razorpay_signature' in request.GET:
+    if 'razorpay_order_id' in request.GET and 'razorpay_payment_id' in request.GET and 'razorpay_signature' in request.GET :
         razor_pay_order_id = request.GET['razorpay_order_id']
         razor_pay_payment_id = request.GET['razorpay_payment_id']
         razor_pay_payment_signature = request.GET['razorpay_signature']
     
-        cart_obj = Cart.objects.filter(razor_pay_order_id=razor_pay_order_id)
+        cart_obj = Cart.objects.filter(razor_pay_order_id=razor_pay_order_id).first()
+        print(cart_obj)
         if cart_obj:
             cart_obj.is_paid = True
             cart_obj.razor_pay_payment_id = razor_pay_payment_id
             cart_obj.razor_pay_payment_signature = razor_pay_payment_signature
-            cart.save()
-        return render(request,'success.html')
+            cart_obj.save()
+        return render(request,'accounts/success.html')
     
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+    
+def user_product(request):
+    if request.method == "GET":
+        items_obj = Item.objects.filter(seller = request.user)
+        print(items_obj)
+        context = {'items':items_obj}
+        return render(request, 'accounts/user_products.html',context)
+    
+    
+    
+def like_product(request):
+    
+    if request.user.is_authenticated:
+        try:
+            if request.method == "GET":
+                print(request.GET)
+                if 'slug' in request.GET:
+                    slug = request.GET['slug']
+                    print(slug)
+                    item = Item.objects.filter(slug=slug).first()
+                    if item:  
+                        print(item)
+                        liked_product, created = LikedProducts.objects.get_or_create(user=request.user, item=item)
+                        print(liked_product)
+                        if created:
+                            print(liked_product)
+                            item.likes += 1
+                            item.save()
+                            return JsonResponse({'success':True,'message': 'Product liked successfully.','liked': True,'likes':item.likes})
+
+                        else:
+                            liked_product.delete()
+                            item.likes -= 1
+                            item.save()
+                            return JsonResponse({'success':True,'message': 'Product removed from liked successfully.','liked': False,'likes':item.likes})
+                    else:
+                        raise Exception('There is some problem in Product liking')
+                    
+                else:
+                    raise Exception('Do not try to manipulate things')
+                    
+                   
+                
+        except Exception as e:
+            print(e)
+            messages.warning(request, str(e))
+            return JsonResponse({'success':False,'message':str(e),'safe':False})
+            
+    else:
+        messages.warning(request, "You need to login to like the Product")
+        return JsonResponse({'success':False,'message':'redirect','safe':False})

@@ -19,6 +19,7 @@
         <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
         {% block script%}
 
         {%endblock%}
@@ -252,6 +253,15 @@ RIGHT SIDEBAR TOGGLE SECTION
                                 <li class="nav-item">
                                     <a class="nav-link  {% if request.resolver_match.url_name == 'home' %}active{% endif %}" aria-current="page" href="{% url 'home:home' %}">Home</a>
                                 </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#Pages" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Buy <span class="fa fa-angle-down ms-1"></span>
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item pt-2" href="{% url 'products:buy_product' %}?category=creative">Creativity</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'products:buy_product' %}?category=scrapify">Scrapyard</a></li>
+                                    </ul>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link  {% if request.resolver_match.url_name == 'sell_product' %}active{% endif %}" 
                                     href="{% url 'products:sell_product' %}">Sell</a>
@@ -297,6 +307,7 @@ RIGHT SIDEBAR TOGGLE SECTION
                                 <ul class="nav-mb dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <li><a class="dropdown-item pt-2 {% if request.resolver_match.url_name == 'edit_profile' %}active{% endif %}" href="{% url 'accounts:edit_profile' %}" >Edit Profile</a></li>
                                     <li><a class="dropdown-item " href="{% url 'accounts:cart'%}">Cart - {{request.user.get_cart_count}}</a> </li>
+                                    <li><a class="dropdown-item " href="{% url 'accounts:your_products'%}">Your Products</a> </li>
                                     <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a></li>
                                 </ul>
                             </li>
@@ -477,6 +488,7 @@ RIGHT SIDEBAR TOGGLE SECTION
                 }); //]]>
 
             </script>
+            {% block script_js %}{% endblock %}
             <!-- //price range (top products) -->
             <!-- single -->
             <script src="{%static 'js/jquery.flexslider.js' %}"></script>

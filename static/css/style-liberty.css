@@ -22891,7 +22891,7 @@ input#amount1 {
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     background-color: transparent;
     color: var(--font-color);
-
+    cursor: pointer;
 }
 
 .w3l-ecommerce-main-inn .product-color {

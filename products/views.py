@@ -81,3 +81,17 @@ def get_product(request, slug):
     except Exception as e:
         print(e)
         
+def buy_product(request):
+    try:
+        if 'category' in request.GET:
+            category_type = request.GET['category']
+            items_obj = Item.objects.filter(category_name__category_type =  category_type,sold=False)
+            context = {'items':items_obj}
+
+            return render(request,'products/buy.html',context)
+       
+                
+    except Exception as e:
+        print(e)
+       
+         

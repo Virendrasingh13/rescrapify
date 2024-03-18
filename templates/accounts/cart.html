@@ -50,6 +50,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            
                             {% if cart.cart_items.count  > 0 %}
                                 {% for cart_item in cart.cart_items.all %}
                                 <tr class="rem2">
@@ -89,6 +90,7 @@
                 </div>
                 <div class="row checkout-left mt-5">
                     {% comment %} <div class="col-md-4 checkout-left-basket">
+                        
                         <h4>Continue to basket</h4>
                         <ul>
                             {% for cart_item in cart.cart_items.all %}
@@ -184,7 +186,7 @@
         "order_id": "{{ payment.id }}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
         "handler": function (response) {
 
-            window.location.href = `{% url 'accounts:success' %}/?razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`;
+            window.location.href = `{% url 'accounts:success' %}?razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`;
             alert(response.razorpay_payment_id);
             alert(response.razorpay_order_id);
             alert(response.razorpay_signature)

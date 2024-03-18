@@ -4,10 +4,11 @@ from rest_framework.views import APIView
 from helpers import send_Contact_mail
 from django.contrib import messages
 from products.models import Item,Category
+from django.db.models import Q
 # Create your views here.
 def home(request):
     
-    context = {'items': Item.objects.all()}
+    context = {'items': Item.objects.all(), 'categories': Category.objects.all()}
     return render(request, 'home.html',context)
 
 
@@ -18,14 +19,15 @@ def get_items_by_category(request):
         try:
         
             if 'category' in request.GET:
-                category_type = request.GET['category']
-                items_obj = Item.objects.filter(category_name__category_type =  category_type)
+                category = request.GET['category']
+                items_obj = Item.objects.filter(category_name__category_type =  category) | Item.objects.filter(category_name__category_name = category )
                 if items_obj:
                     items = [{
                         'item_name':item .item_name,
                         'price' : item.price,
                         'slug' : item.slug,
                         'image' : item.item_image.first().image.url if item.item_image.exists() else None,
+
                     } for item in items_obj]
 
                     return JsonResponse({'success':True,'items':items})
@@ -90,6 +92,5 @@ def contact(request):
         
     return render(request,'contact.html')
     
-    
-    
-    
+
+

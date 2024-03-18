@@ -2,6 +2,9 @@ import uuid
 import time
 from django.core.mail import send_mail
 from rescrapify import settings
+from io import BytesIO
+from django.template.loader import get_template
+import xhtml2pdf.pisa as pisa
 
 
 def send_email_token(email, slug):
@@ -67,3 +70,27 @@ def send_password_email(email,forgot_password_token):
     except Exception as e:
         print(e)
         return False
+    
+    
+#for invoice 
+def save_pdf(params:dict):
+    template = get_template('invoice.html')
+    html = template.render(params)
+    response = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), response)
+    file_name = uuid.uuid4()
+    
+    try:
+        with open(str(settings.BASE_DIR)+ f"/static/pdfs/{file_name}.pdf", 'wb+') as output:
+            pdf = pisa.pisaDocument(BytesIO(html.encode('UTF-8')), output)
+            
+            if pdf.err:
+                return '', False
+    
+
+            return file_name, True
+            
+    except Exception as e:
+        print(e)
+        
+   

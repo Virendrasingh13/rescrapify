@@ -7,7 +7,6 @@ from django.core.validators import MaxValueValidator,MinValueValidator
 from django.contrib.auth import get_user_model
 
 
-
 # Create your models here.
 
 class CustomUser(AbstractUser):
@@ -56,7 +55,7 @@ class Cart(models.Model):
         return self.user.email + " - cart"
     
     def get_cart_total(self):
-        cart_items = CartItems.objects.all()
+        cart_items = CartItems.objects.filter(cart__is_paid=False)
         price = []
         for cart_item in cart_items:
             price.append(cart_item.item.price)
@@ -74,3 +73,13 @@ class CartItems(models.Model):
     
     def get_item_price(self):
         return self.item.price
+    
+    
+class LikedProducts(models.Model):
+    from products.models import Item
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="liked_products")
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True,blank=True, related_name="liked_by")
+    
+    
+    def __str__(self):
+        return self.user.email + " liked " + self.item.item_name

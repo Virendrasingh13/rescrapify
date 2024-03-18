@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+<title>{% block title %}Cart - Re:scrapify{% endblock %}</title>
+{% block body %}
+
+<section class="w3l-blog bloghny-page">
+    <div class="blog py-5" id="Newsblog">
+        <div class="container py-lg-5 py-md-4 py-2">
+            <div class="row">
+                <div class=" bloghnypage-left">
+                    <div class="row">
+                        {% for item in items %}
+
+                        <div class="item mt-5">
+                            <div class="card">
+                                <div class="card-header p-0 position-relative">
+                                    <a href="blog-single.html" class="zoom d-flex justify-content-center">
+                                        <img class="card-img-bottom d-block pic-1 img-fluid radius-image" src="/media/{{item.item_image.first.image}}" alt="blog-img">
+                                    </a>
+                                </div>
+                                <div class="card-body blog-details">
+                                    <div class="price-review d-flex justify-content-between mb-1 align-items-center">
+                                        <p>{{item.price}} <i class="fas fa-rupee-sign"></i></p>
+                                    </div>
+                                    <a href="blog-single.html" class="blog-desc">{{item.item_name}}</a>
+                                    <p class="mt-1">{{item.description}}</p>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="author align-items-center">
+                                        <a href="#author" class="post-author">
+                                            <img src="assets/images/team1.jpg" alt="" class="img-fluid rounded-circle">
+                                        </a>
+                                        <ul class="blog-meta d-flex justify-content-around">
+                                            <li>
+                                                <span class="meta-value">
+                                                    {% if item.sold %}Sold
+                                                    {% else %}
+                                                    Available
+                                                    {% endif %}
+                                                </span>
+                                                
+                                            </li>
+                                            <li>
+                                                <span class="price-review">
+                                                    <p>
+                                                    <i class="fa fa-thumbs-up"></i> {{item.likes}}</p>
+                                                </span>
+                                                
+                                            </li>
+                                            <li>
+                                                <span class="price-review">
+                                                    <p>
+                                                    {% if item.likes < 10 %}
+                                                    <i class="fa fa-thumbs-up"></i> Bronze}</p>
+                                                    {% endif %}
+                                                    
+                                                </span>
+                                                
+                                            </li>
+                                        </ul>
+                                        <div class="date">
+                                            <p>{{item.added_at.date}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+               
+            </div>
+           
+        </div>
+    </div>
+</section>
+
+{% endblock %}

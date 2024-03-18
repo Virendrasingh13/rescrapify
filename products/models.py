@@ -1,5 +1,5 @@
 from django.db import models
-from django.forms import IntegerField
+
 from accounts.models import CustomUser
 from helpers import generate_unique_hash
 from django.utils.text import slugify
@@ -30,6 +30,9 @@ class Item(models.Model):
     description = models.TextField()
     slug = models.SlugField(unique=True, null=True, blank=True)
     seller = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    sold = models.BooleanField(default=False)
+    likes = models.IntegerField(default=0)
+    added_at = models.DateTimeField(auto_now_add=False,null=True, blank=True)
     # quantity = models.IntegerField(null=True,blank=True,default=None)
         
     def save(self,*args, **kwargs):

@@ -36,7 +36,7 @@
 
 6. Navigate to the project directory:
     ```bash
-    cd rescapify
+    cd rescrapify
     ```
 
 8. Install project dependencies:

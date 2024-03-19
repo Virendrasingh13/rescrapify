@@ -31,7 +31,7 @@ def get_items_by_category(request):
                     } for item in items_obj]
                     
                 elif request.GET['category']=="All":
-                    items_obj = Item.objects.all()
+                    items_obj = Item.objects.filter(sold=False)
                     items = [{
                         'item_name':item .item_name,
                         'price' : item.price,

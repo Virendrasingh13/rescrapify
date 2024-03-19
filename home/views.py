@@ -8,7 +8,7 @@ from django.db.models import Q
 # Create your views here.
 def home(request):
     
-    context = {'items': Item.objects.all(), 'categories': Category.objects.all()}
+    context = {'items': Item.objects.filter(sold=False), 'categories': Category.objects.all()}
     return render(request, 'home.html',context)
 
 
@@ -20,7 +20,7 @@ def get_items_by_category(request):
         
             if 'category' in request.GET:
                 category = request.GET['category']
-                items_obj = Item.objects.filter(category_name__category_type =  category) | Item.objects.filter(category_name__category_name = category )
+                items_obj = Item.objects.filter(category_name__category_type =  category,sold=False) | Item.objects.filter(category_name__category_name = category ,sold=False)
                 if items_obj:
                     items = [{
                         'item_name':item .item_name,
@@ -29,8 +29,10 @@ def get_items_by_category(request):
                         'image' : item.item_image.first().image.url if item.item_image.exists() else None,
 
                     } for item in items_obj]
+                else:
+                    items = []
 
-                    return JsonResponse({'success':True,'items':items})
+                return JsonResponse({'success':True,'items':items})
         
             items_obj = Item.objects.all()
             

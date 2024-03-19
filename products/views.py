@@ -85,8 +85,9 @@ def buy_product(request):
     try:
         if 'category' in request.GET:
             category_type = request.GET['category']
+            category_obj = Category.objects.filter(category_type=category_type)
             items_obj = Item.objects.filter(category_name__category_type =  category_type,sold=False)
-            context = {'items':items_obj}
+            context = {'items':items_obj,'categories':category_obj}
 
             return render(request,'products/buy.html',context)
        

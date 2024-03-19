@@ -123,30 +123,30 @@
 
                                         <div class="controls">
                                             
-                                            <input class="billing-address-name form-control" type="email" name="email" placeholder="Email" value="{{request.user.email}}" >
+                                            <input required class="billing-address-name form-control" type="email" name="email" placeholder="Email" value="{{request.user.email}}" >
                                         </div>
                                         <div class="controls">
 
-                                            <input class="billing-address-name form-control" type="text" name="name" placeholder="Full name" value="{{request.user.first_name}} {{request.user.last_name}}">
+                                            <input required class="billing-address-name form-control" type="text" name="name" placeholder="Full name" value="{{request.user.first_name}} {{request.user.last_name}}">
                                         </div>
                                         <div class="w3_agileits_card_number_grids">
                                             <div class="w3_agileits_card_number_grid_left">
                                                 <div class="controls">
 
-                                                    <input class="form-control" type="text" name="phone_no" placeholder="Mobile number" value="{{request.user.phone_no}}">
+                                                    <input required class="form-control" type="text" name="phone_no" placeholder="Mobile number" value="{{request.user.phone_no}}">
                                                 </div>
                                             </div>
                                             <div class="w3_agileits_card_number_grid_right">
                                                 <div class="controls">
 
-                                                    <input class="form-control" type="text" name="address" placeholder="Address" value="">
+                                                    <input required class="form-control" type="text" name="address" placeholder="Address" value="">
                                                 </div>
                                             </div>
                                             <div class="clear"> </div>
                                         </div>
                                         <div class="controls">
 
-                                            <input class="form-control" type="text" name="city" placeholder="Town/City" value="{{request.user.city}}">
+                                            <input required class="form-control" type="text" name="city" placeholder="Town/City" value="{{request.user.city}}">
                                         </div>
                                         
                                     </div>

@@ -65,9 +65,9 @@
                 <div class="form-sub-w3">
                     <select class="slct-lst" id="selectType"  required>
                         <option selected disabled value="">Choose Type</option>
-                        {% for cat in category %}
-                        <option value="{{ cat.category_type }}">{{ cat.category_type.upper }}</option>
-                        {% endfor %}
+                        <option value="creative">CREATIVE</option>
+                        <option value="scrapify">SCRAPIFY</option>
+                        
                     </select>
                     <div class="icon-w3">
                         <span class="fas fa-align-justify" aria-hidden="true"></span>

@@ -307,7 +307,8 @@ RIGHT SIDEBAR TOGGLE SECTION
                                 <ul class="nav-mb dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <li><a class="dropdown-item pt-2 {% if request.resolver_match.url_name == 'edit_profile' %}active{% endif %}" href="{% url 'accounts:edit_profile' %}" >Edit Profile</a></li>
                                     <li><a class="dropdown-item " href="{% url 'accounts:cart'%}">Cart - {{request.user.get_cart_count}}</a> </li>
-                                    <li><a class="dropdown-item " href="{% url 'accounts:your_products'%}">Your Products</a> </li>
+                                    <li><a class="dropdown-item " href="{% url 'accounts:your_products'%}">My Products</a> </li>
+                                    <li><a class="dropdown-item " href="{% url 'accounts:your_orders'%}">My Orders</a> </li>
                                     <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a></li>
                                 </ul>
                             </li>

@@ -382,12 +382,14 @@ def add_to_cart(request, slug):
             user = request.user
             cart , creatd = Cart.objects.get_or_create(user = user, is_paid=False)
             
-            cart_items = CartItems.objects.create(cart = cart, item=item)
-            if cart_items:
+            cart_items,created = CartItems.objects.get_or_create(cart = cart, item=item)
+            if created:
+                item.sold = True
+                item.save()
                 messages.success(request,'Item added in cart successfully')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
-                raise Exception('There is some problem in adding cart')
+                raise Exception('Item is already in your cart')
         
         else:
             raise Exception('You need to be logged in')
@@ -402,6 +404,9 @@ def remove_cart(request,slug):
     try:
         cart_item = CartItems.objects.filter(item__slug=slug).first()
         if cart_item:
+            item = Item.objects.filter(slug = slug ).first()
+            item.sold = False
+            item.save()
             cart_item.delete()
             messages.success(request,'Item removed from cart successfully')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -505,7 +510,17 @@ def user_product(request):
         messages.warning(request, "You need to login")
         return redirect('accounts:login') 
     
-    
+def user_order(request):
+    if request.user.is_authenticated:
+        if request.method == "GET":
+            order_obj = order.objects.filter(user=request.user)
+            
+            print(order_obj)
+            context = {'orders':order_obj}
+            return render(request, 'accounts/user_orders.html',context)
+    else:
+        messages.warning(request, "You need to login")
+        return redirect('accounts:login') 
     
 def like_product(request):
     

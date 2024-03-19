@@ -7,7 +7,7 @@
         <div class="container py-lg-4">
             <div class="error-block">
                 <h1>Success</h1>
-                <h2><a href="{% url 'accounts:invoice' order_id %}">Invoice</a></h2>
+                <h2><a href="{% url 'accounts:invoice' order_id %}" class="btn btn-secondary">Invoice</a></h2>
                 <p class="mt-4">Your payment has been succeed<br>Congratulations</p>
 
                 <a href="{% url 'home:home' %}" class="btn btn-style btn-primary mt-4"> <span class="fa fa-arrow-left me-2"></span> Back to Home</a>

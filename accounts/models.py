@@ -66,10 +66,13 @@ class Cart(models.Model):
 class CartItems(models.Model):
     from products.models import Item
     cart = models.ForeignKey(Cart , on_delete=models.CASCADE, related_name="cart_items")
-    item = models.ForeignKey(Item,  on_delete=models.SET_NULL,null=True,blank=True)
+    item = models.ForeignKey(Item,  on_delete=models.CASCADE,null=True,blank=True)
     
     def __str__(self) -> str:
-        return self.cart.user.email + " - cart item - " + self.item.item_name
+        if self.item:
+            return f"{self.cart.user.email} - cart item - {self.item.item_name}"
+        else:
+            return f"{self.cart.user.email} - cart item - None"
     
     def get_item_price(self):
         return self.item.price

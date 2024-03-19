@@ -87,18 +87,18 @@
                                 {% if request.user.is_authenticated %}
                                 {% for liked in item.liked_by.all %}
                                     {% if liked.user == request.user %}
-                                    <i class="0 heart-icon fas fa-thumbs-down" data-slug="{{ item.slug }}" aria-hidden="true"></i>
+                                    <i class="0 heart-icon fas fa-heart" data-slug="{{ item.slug }}" aria-hidden="true"></i>
                                     {% else %}
                                         {% if forloop.last %}
-                                        <i class="1 heart-icon fas fa-thumbs-up" data-slug="{{ item.slug }}" aria-hidden="true"></i>
+                                        <i class="1 heart-icon far fa-heart" data-slug="{{ item.slug }}" aria-hidden="true"></i>
                                         {% endif %}
                                     {% endif %}
                                     {% empty %}
-                                    <i class="2 heart-icon price fas fa-thumbs-up" data-slug="{{ item.slug }}" aria-hidden="true"></i>
+                                    <i class="2 heart-icon price far fa-heart" data-slug="{{ item.slug }}" aria-hidden="true"></i>
                                     {% endfor %}
                                     
                             {% else %}
-                                <i class="4 heart-icon price fas fa-thumbs-up" data-slug="{{ item.slug }}" aria-hidden="true"></i>
+                                <i class="4 heart-icon price far fa-heart" data-slug="{{ item.slug }}" aria-hidden="true"></i>
                             {% endif %}
 
                                 {{item.likes}}</span>

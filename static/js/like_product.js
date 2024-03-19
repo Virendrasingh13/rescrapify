@@ -7,7 +7,7 @@ heartIcons.forEach(icon => {
     
         const slug = this.dataset.slug;
 
-        const isLiked = this.classList.contains('fa-thumbs-up');
+        const isLiked = this.classList.contains('fas');
         console.log(isLiked)
         console.log(JSON.stringify({ 'slug': slug }));
         fetch(path+"?slug="+slug )
@@ -15,12 +15,12 @@ heartIcons.forEach(icon => {
         .then(data => {
             if (data.success){
                 if (isLiked) {
-                    this.classList.remove('fa-thumbs-up');
-                    this.classList.add('fa-thumbs-down');
+                    this.classList.remove('fas');
+                    this.classList.add('far');
                     window.location.href = cur_path;
                 } else {
-                    this.classList.remove('fa-thumbs-down');
-                    this.classList.add('fa-thumbs-up');
+                    this.classList.remove('far');
+                    this.classList.add('fas');
                     window.location.href = cur_path;
                 }
                 

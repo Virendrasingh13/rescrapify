@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import LoginView,Register,LogoutView,verify,editProfile,change_password,change_email,invoice,like_product,check_email,forgot_password,add_to_cart,cart,remove_cart,success,user_product
+from .views import LoginView,Register,LogoutView,verify,editProfile,change_password,change_email,invoice,like_product,check_email,forgot_password,add_to_cart,cart,remove_cart,success,user_product,user_order
 
 
 app_name = 'accounts'
@@ -21,4 +21,5 @@ urlpatterns = [
     path('your_products/',user_product,name="your_products"),
     path('like-product/',like_product, name="like_product"),
     path('invoice/<order_id>',invoice, name="invoice"),
+    path('your_orders/',user_order,name="your_orders"),
 ]

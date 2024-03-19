@@ -29,19 +29,23 @@ def get_items_by_category(request):
                         'image' : item.item_image.first().image.url if item.item_image.exists() else None,
 
                     } for item in items_obj]
-                else:
-                    items = []
-
-                return JsonResponse({'success':True,'items':items})
-        
-            items_obj = Item.objects.all()
-            
-            items = [{
+                    
+                elif request.GET['category']=="All":
+                    items_obj = Item.objects.all()
+                    items = [{
                         'item_name':item .item_name,
                         'price' : item.price,
                         'slug' : item.slug,
                         'image' : item.item_image.first().image.url if item.item_image.exists() else None,
                     } for item in items_obj]
+                else:
+                    items = []
+
+                return JsonResponse({'success':True,'items':items})
+        
+            
+            
+            
             return JsonResponse({'success':True,'items':items})
         except Exception as e:
             print(e)

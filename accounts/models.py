@@ -55,7 +55,7 @@ class Cart(models.Model):
         return self.user.email + " - cart" 
     
     def get_cart_total(self):
-        cart_items = CartItems.objects.filter(cart__is_paid=False)
+        cart_items = CartItems.objects.filter(cart__is_paid=False,cart=self)
         price = []
         for cart_item in cart_items:
             price.append(cart_item.item.price)

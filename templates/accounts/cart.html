@@ -100,7 +100,7 @@
                             <li>Total <i>-</i> <span>{{cart.get_cart_total}}</span></li>
                         </ul>
                     </div> {% endcomment %}
-                    {% if cart %}
+                    {% if cart.cart_items.count > 0 %}
                     <div class="col-md-4 checkout-left-basket">
                         <h4>Continue to basket</h4>
                         <ul>

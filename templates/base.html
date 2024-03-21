@@ -279,7 +279,7 @@ RIGHT SIDEBAR TOGGLE SECTION
                                     <div id="search" class="pop-overlay">
                                         <div class="popup">
                                             <h3 class="title-w3l two mb-4 text-left">Search Here</h3>
-                                            <form action="#" method="GET" class="search-box d-flex position-relative">
+                                            <form action="{% url 'home:search' %}" method="GET" class="search-box d-flex position-relative">
                                                 <input type="search" placeholder="Enter Keyword here" name="search"
                                                     required="required" autofocus="">
                                                 <button type="submit" class="btn"><span class="fas fa-search"

@@ -16,7 +16,19 @@ def home(request):
     context = {'items': Item.objects.filter(sold=False),'unsold_items_by_category': unsold_items_by_category, 'categories': categories}
     return render(request, 'home.html', context)
 
-
+def search_items(request):
+    query = request.GET.get('search')
+    if query:
+        items = Item.objects.filter(item_name__icontains=query)
+    else:
+        items = Item.objects.all()
+        
+    categories = Category.objects.all()
+    unsold_items_by_category = {}
+    
+    for category in categories:
+        unsold_items_by_category[category] = Item.objects.filter(category_name=category, sold=False)
+    return render(request, 'home.html', {'items': items,'categories': categories,'unsold_items_by_category': unsold_items_by_category})
 
 def get_items_by_category(request):
     

@@ -6,6 +6,7 @@ from django.contrib import messages
 from products.models import Item,Category
 from django.db.models import Q
 # Create your views here.
+
 def home(request):
     categories = Category.objects.all()
     unsold_items_by_category = {}

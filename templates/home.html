@@ -181,7 +181,7 @@
     });
 
     function fetchProducts(category){
-        fetch("{% url 'home:home' %}category_item/?category=" + category)
+        fetch("{% url 'home:home'   %}category_item/?category=" + category)
         .then(response => response.json())
         .then(data => {
             if (data.success){

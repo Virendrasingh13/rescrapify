@@ -7,9 +7,15 @@ from products.models import Item,Category
 from django.db.models import Q
 # Create your views here.
 def home(request):
+    categories = Category.objects.all()
+    unsold_items_by_category = {}
     
-    context = {'items': Item.objects.filter(sold=False), 'categories': Category.objects.all()}
-    return render(request, 'home.html',context)
+    for category in categories:
+        unsold_items_by_category[category] = Item.objects.filter(category_name=category, sold=False)
+    
+    context = {'items': Item.objects.filter(sold=False),'unsold_items_by_category': unsold_items_by_category, 'categories': categories}
+    return render(request, 'home.html', context)
+
 
 
 def get_items_by_category(request):
@@ -22,6 +28,7 @@ def get_items_by_category(request):
                 category = request.GET['category']
                 items_obj = Item.objects.filter(category_name__category_type =  category,sold=False) | Item.objects.filter(category_name__category_name = category ,sold=False)
                 if items_obj:
+                    
                     items = [{
                         'item_name':item .item_name,
                         'price' : item.price,

@@ -14,7 +14,7 @@
                         <div class="item mt-5">
                             <div class="card">
                                 <div class="card-header p-0 position-relative">
-                                    <a href="blog-single.html" class="zoom d-flex justify-content-center">
+                                    <a href="{% url 'products:get_product' item.slug %}" class="zoom d-flex justify-content-center">
                                         <img class="card-img-bottom d-block pic-1 img-fluid radius-image" src="/media/{{item.item_image.first.image}}" alt="blog-img">
                                     </a>
                                 </div>
@@ -22,21 +22,21 @@
                                     <div class="price-review d-flex justify-content-between mb-1 align-items-center">
                                         <p>{{item.price}} <i class="fas fa-rupee-sign"></i></p>
                                     </div>
-                                    <a href="blog-single.html" class="blog-desc">{{item.item_name}}</a>
+                                    <a href="{% url 'products:get_product' item.slug %}" class="blog-desc">{{item.item_name}}</a>
                                     <p class="mt-1">{{item.description}}</p>
                                 </div>
                                 <div class="card-footer">
                                     <div class="author align-items-center">
                                         <a href="#author" class="post-author">
-                                            <img src="assets/images/team1.jpg" alt="" class="img-fluid rounded-circle">
+                                          
                                         </a>
                                         <ul class="blog-meta d-flex justify-content-around">
                                             <li>
-                                                <span class="meta-value">
-                                                    {% if item.sold %}Sold
+                                                <span class="price-review">
+                                                    <p>{% if item.sold %}Sold
                                                     {% else %}
                                                     Available
-                                                    {% endif %}
+                                                    {% endif %}</p>
                                                 </span>
                                                 
                                             </li>

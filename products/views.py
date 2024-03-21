@@ -87,9 +87,16 @@ def buy_product(request):
             category_type = request.GET['category']
             category_obj = Category.objects.filter(category_type=category_type)
             items_obj = Item.objects.filter(category_name__category_type =  category_type,sold=False)
-            context = {'items':items_obj,'categories':category_obj}
+            # categories = Category.objects.all()
+        unsold_items_by_category = {}
+        
+        for category in category_obj:
+            unsold_items_by_category[category] = Item.objects.filter(category_name=category, sold=False)
+        
+        
+        context = {'items':items_obj,'unsold_items_by_category': unsold_items_by_category,'categories':category_obj}
 
-            return render(request,'products/buy.html',context)
+        return render(request,'products/buy.html',context)
        
                 
     except Exception as e:

@@ -31,7 +31,7 @@
 
 5. Fork the main repository and Clone your forked repository:
     ```bash
-    git clone https://github.com/<your username>/rescapify.git
+    git clone https://github.com/<your username>/rescrapify.git
     ```
 
 6. Navigate to the project directory:
@@ -61,9 +61,11 @@
 
     RAZOR_PAY_KEY_ID = "<Your razorpay key id>"
     RAZOR_PAY_KEY_SECRET = "<Your razorpay key secret>"
+
+    LINK = http://127.0.0.1:8000
     ```
 
-9.  Make changes in database using makemigrations:
+9.  Make changes in the database using makemigrations:
     ```bash
     python manage.py makemigrations
     ```
@@ -73,7 +75,7 @@
     python manage.py migrate
     ```
 
-11. Create Superuser to access admin panel
+11. Create a Superuser to access the admin panel
     ```bash
     python manage.py createsuperuser
     ```

@@ -18535,7 +18535,7 @@ a.dropdown-item.active {
 
 .navbar .search-right .popup form input[type="search"] {
     font-size: 18px;
-    color: var(--heading-color);
+    color: #fff;
     border: none;
     background: transparent;
     padding: 18px 50px 18px 0px;

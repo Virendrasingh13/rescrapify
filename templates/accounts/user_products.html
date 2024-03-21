@@ -20,7 +20,7 @@
                                 </div>
                                 <div class="card-body blog-details">
                                     <div class="price-review d-flex justify-content-between mb-1 align-items-center">
-                                        <p>{{item.price}} <i class="fas fa-rupee-sign"></i></p>
+                                        <p><i class="fas fa-rupee-sign"></i> {{item.price}}</p>
                                     </div>
                                     <a href="{% url 'products:get_product' item.slug %}" class="blog-desc">{{item.item_name}}</a>
                                     <p class="mt-1">{{item.description}}</p>

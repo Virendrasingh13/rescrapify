@@ -5,6 +5,7 @@ from .managers import UserManager
 from helpers import generate_unique_hash
 from django.core.validators import MaxValueValidator,MinValueValidator
 from django.contrib.auth import get_user_model
+from django.utils.html import mark_safe
 
 
 # Create your models here.
@@ -41,6 +42,14 @@ class CustomUser(AbstractUser):
         
     def get_cart_count(self):
         return CartItems.objects.filter(cart__is_paid = False, cart__user__email = self.email).count()
+    
+    def image_tag(self):
+        if self.user_image:
+            return mark_safe('<img src="{}" width="100px" height="100px" />'.format(self.user_image.url))
+        else:
+            return None
+
+    image_tag.short_description = 'Image Preview'
             
     
 class Cart(models.Model):

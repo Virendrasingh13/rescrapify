@@ -93,4 +93,47 @@ def save_pdf(params:dict):
     except Exception as e:
         print(e)
         
-   
+
+
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from django.http import HttpResponse
+from django.utils.text import slugify
+
+def generate_pdf(queryset, fields, model_name):
+    response = HttpResponse(content_type='application/pdf')
+    filename = f"{slugify(model_name)}_data.pdf"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    # Create PDF title with model name
+    title = f"{model_name} Data"
+
+    # Create PDF
+    doc = SimpleDocTemplate(response, pagesize=letter)
+    doc.title = title  # Set PDF title
+    table_data = [fields] + [[getattr(obj, field) for field in fields] for obj in queryset]
+    table = Table(table_data)
+
+    # Add styling if needed
+    style = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+                        ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+    table.setStyle(style)
+
+    # Add table to the PDF
+    doc.build([table])
+
+    return response
+
+
+def download_as_pdf(modeladmin, request, queryset):
+    fields = [field.name for field in queryset.model._meta.fields]
+    model_name = queryset.model.__name__  # Get model name
+    return generate_pdf(queryset, fields, model_name)
+
+download_as_pdf.short_description = "Download selected items as PDF"

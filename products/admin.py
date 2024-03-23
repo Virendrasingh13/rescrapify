@@ -1,18 +1,22 @@
 from django.contrib import admin
 from .models import Item, Category, Item_image
+from helpers import download_as_pdf
 
 class ItemImageInline(admin.StackedInline):
     model = Item_image
     extra = 1
+    actions = [download_as_pdf]
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('category_name', 'category_type')
     prepopulated_fields = {'slug': ('category_name',)}
+    actions = [download_as_pdf]
 
 @admin.register(Item_image)
 class ItemImageAdmin(admin.ModelAdmin):
     list_display = ('item', 'image_tag')
+    actions = [download_as_pdf]
 
     
 
@@ -23,6 +27,7 @@ class ItemAdmin(admin.ModelAdmin):
     search_fields = ('item_name', 'seller__email')
     prepopulated_fields = {'slug': ('item_name',)}
     inlines = [ItemImageInline]
+    actions = [download_as_pdf]
 
    
     def display_first_image(self, obj):
@@ -33,4 +38,6 @@ class ItemAdmin(admin.ModelAdmin):
 
     display_first_image.allow_tags = True
     display_first_image.short_description = 'First Image'
+
+
 

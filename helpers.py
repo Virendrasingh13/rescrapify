@@ -95,6 +95,53 @@ def save_pdf(params:dict):
         
 
 
+import openpyxl
+from django.db import models
+from django.http import HttpResponse
+from django.utils.text import slugify
+
+def generate_excel(queryset, fields, model_name):
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    filename = f"{slugify(model_name)}_data.xlsx"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    # Create a workbook and add a worksheet
+    workbook = openpyxl.Workbook()
+    worksheet = workbook.active
+
+    # Write headers (field names)
+    worksheet.append(fields)
+
+    # Write data rows
+    for obj in queryset:
+        row_data = []
+        for field in fields:
+            field_value = getattr(obj, field)
+            if isinstance(field_value, str):
+                row_data.append(field_value)
+            elif isinstance(field_value, models.ImageField):
+                # For ImageField, append the path of the image
+                row_data.append(str(field_value))  # Assuming ImageField stores the path as a string
+            else:
+                row_data.append(str(field_value))  # Convert non-text fields to string
+        worksheet.append(row_data)
+
+    # Save workbook to response
+    workbook.save(response)
+
+    return response
+
+
+def download_as_excel(modeladmin, request, queryset):
+    # Get all fields including ImageField
+    fields = [field.name for field in queryset.model._meta.fields]
+    model_name = queryset.model.__name__  # Get model name
+    return generate_excel(queryset, fields, model_name)
+
+download_as_excel.short_description = "Download selected items as Excel"
+
+
+# utils.py
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
@@ -129,7 +176,6 @@ def generate_pdf(queryset, fields, model_name):
     doc.build([table])
 
     return response
-
 
 def download_as_pdf(modeladmin, request, queryset):
     fields = [field.name for field in queryset.model._meta.fields]

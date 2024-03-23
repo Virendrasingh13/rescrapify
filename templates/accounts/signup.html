@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class="form-sub-w3">
-                        <input type="password" name="password" placeholder="Password" required="" />
+                        <input type="password" name="password" placeholder="Password" required pattern="(?=.*\d).{8,}" title="Password must be 8 characters long and contain at least one number" />
                         <div class="icon-w3">
                             <span class="fas fa-eye" aria-hidden="true" id="password-toggle"></span>
                         </div>

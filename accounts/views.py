@@ -85,6 +85,8 @@ def Register(request):
                 if ('email' in body and 'password' in body):
                     email = body['email']
                     password = body['password']
+                    if len(password) < 8 or not any(char.isdigit() for char in password):
+                        raise Exception("Password must be 8 characters long and contain at least one number")
                     first_name = body['first_name']
                     phone_no = body['phone_no']
                     last_name = body['last_name']

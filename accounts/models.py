@@ -75,7 +75,8 @@ class CartItems(models.Model):
             return f"{self.cart.user.email} - cart item - None"
     
     def get_item_price(self):
-        return self.item.price
+        if self.item:
+            return self.item.price
     
     
 class LikedProducts(models.Model):

@@ -3,6 +3,7 @@ from django.db import models
 from accounts.models import CustomUser
 from helpers import generate_unique_hash
 from django.utils.text import slugify
+from django.utils.html import mark_safe
 # Create your models here.
 
 CATEGORY_TYPES = [
@@ -47,3 +48,11 @@ class Item(models.Model):
 class Item_image(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE,related_name="item_image")
     image = models.ImageField(upload_to="images/products/", null=True, blank=True)
+    
+    def image_tag(self):
+        if self.image:
+            return mark_safe('<img src="{}" width="100px" height="100px" />'.format(self.image.url))
+        else:
+            return None
+
+    image_tag.short_description = 'Image Preview'

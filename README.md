@@ -19,6 +19,7 @@
 
 3. Activate the virtual environment:
     ```bash
+    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
     .\venv\Scripts\activate
     ```
 
@@ -32,6 +33,8 @@
 5. Fork the main repository and Clone your forked repository:
     ```bash
     git clone https://github.com/<your username>/rescrapify.git
+    git remote -v 
+    git pull origin main   
     ```
 
 6. Navigate to the project directory:
@@ -55,14 +58,13 @@
 2. Add SECRET_KEY in .env :
     
     ```bash
-    SECRET_KEY= <YOUR GENERATED SECRET_KEY>
-    EMAIL_HOST_USER = "<Your email Id>"
-    EMAIL_HOST_PASSWORD = "<You email app password>" 
+    SECRET_KEY= 2^y(*!7(n_(_v#o*+7w-_wt*@k(8m8l&9x-_cdbwube2%e6+4z
+    EMAIL_HOST_USER = "rescrapify.demo.login@gmail.com"
+    EMAIL_HOST_PASSWORD = "czyzipxusaoqvjxu" 
+    RAZOR_PAY_KEY_ID = rzp_test_TqHFum4mPJRzWx
+    RAZOR_PAY_KEY_SECRET = 7OC5Z3oqgEG4OjCcFs5LYtGK
 
-    RAZOR_PAY_KEY_ID = "<Your razorpay key id>"
-    RAZOR_PAY_KEY_SECRET = "<Your razorpay key secret>"
-
-    LINK = http://127.0.0.1:8000
+    LINK =  http://127.0.0.1:8000/
     ```
 
 9.  Make changes in the database using makemigrations:
